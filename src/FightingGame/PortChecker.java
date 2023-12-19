@@ -24,6 +24,5 @@ public class PortChecker {
 
     private static void startServer(int port) {
         System.out.println("Starting server on port " + port);
-        // Add your server startup logic here
     }
 }

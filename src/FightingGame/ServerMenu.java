@@ -28,19 +28,19 @@ import static FightingGame.PortChecker.isPortAvailable;
  */
 public class ServerMenu extends JFrame implements KeyListener{
     public static FightingGame gm;
+    public static PingPongGame ppg;
     ServerMenu sm;
     private ServerSocketHandler serverSocketHandler;
     public JButton BackButton;
-    public JButton Start;
-    public JButton ChooseChar;
-    public static String P1ChosenCharNum = "p1redChar";
-    public JButton Char1 , Char2 , Char3;
+    public JButton FightingGame;
+    public JButton PingPongGame;
     int gameWidth = 1000 , gameHeight = 500 , x = 0 , y = 0;
 
     public ServerMenu(){
-        gm = new FightingGame(); // Initialize GameFrame here
+        gm = new FightingGame(); 
+        ppg = new PingPongGame();
 
-                if (isPortAvailable(12345)) startServer(12345,sm,gm);
+                if (isPortAvailable(12345)) startServer(12345,sm,gm,ppg);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setFocusable(true);  
         addKeyListener(this);  
@@ -60,7 +60,7 @@ public class ServerMenu extends JFrame implements KeyListener{
         connectedPlayerIp.setBounds(50, 125, 400, 100);
         connectedPlayerIp.setFont(font);
         JLabel connectedPlayerIpDisp = new JLabel("Nothing");
-        connectedPlayerIpDisp.setBounds(50, 175, 400, 100);
+        connectedPlayerIpDisp.setBounds(350, 125, 400, 100);
         connectedPlayerIpDisp.setFont(font);
         
         try {
@@ -76,30 +76,17 @@ public class ServerMenu extends JFrame implements KeyListener{
         BackButton.setBounds(0, 0, 1000, 100);
         BackButton.setBackground(Color.white);
         
-        Start = new JButton("Start");
-        Start.setBounds( 125, 300, 250,100);
-        Start.setBackground(Color.white);
-        Start.setFont(font);
+        FightingGame = new JButton("2D Figthing Game");
+        FightingGame.setBounds( 125, 300, 300,100);
+        FightingGame.setBackground(Color.white);
+        FightingGame.setFont(font);
+        
+        PingPongGame = new JButton("Ping Pong Game");
+        PingPongGame.setBounds( 525, 300, 300,100);
+        PingPongGame.setBackground(Color.white);
+        PingPongGame.setFont(font);
 
-        ChooseChar = new JButton("Select a character");
-        ChooseChar.setBounds(600, 300, 250, 100);
-        ChooseChar.setBackground(Color.white);
-        ChooseChar.setFont(font);
-        
-        Char1 = new JButton();
-        Char1.setBounds(525, 150, 100, 100);
-        Char1.setBackground(Color.red);
-        Char1.setFont(font);
-        
-        Char2 = new JButton();
-        Char2.setBounds(675, 150, 100, 100);
-        Char2.setBackground(Color.blue);
-        Char2.setFont(font);
-        
-        Char3 = new JButton();
-        Char3.setBounds(825, 150, 100, 100);
-        Char3.setBackground(Color.yellow);
-        Char3.setFont(font);
+
         
         
         
@@ -107,11 +94,9 @@ public class ServerMenu extends JFrame implements KeyListener{
         add(ipAddressLabel);
         add(connectedPlayerIp);
         add(connectedPlayerIpDisp);
-        add(Start);
-        add(ChooseChar);
-        add(Char1);
-        add(Char2);
-        add(Char3);
+        add(FightingGame);
+        add(PingPongGame);
+
         BackButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -124,15 +109,14 @@ public class ServerMenu extends JFrame implements KeyListener{
                 repaint();
             }
         });   
-            Start.addActionListener(new ActionListener(){
+        FightingGame.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 
             if (serverSocketHandler != null) {
-                serverSocketHandler.sendMessage("start");
-                serverSocketHandler.sendMessage(P1ChosenCharNum);
+                serverSocketHandler.sendMessage("Fight");
             }
-                System.out.println("Start btn daragdsan");
+                System.out.println("FightingGame btn daragdsan");
 //                gm = new GameFrame();
                 gm.setVisible(true);
                 add(gm);
@@ -140,54 +124,41 @@ public class ServerMenu extends JFrame implements KeyListener{
                 remove(ipAddressLabel);
                 remove(connectedPlayerIp);
                 remove(connectedPlayerIpDisp);
-                remove(Start);
-                remove(ChooseChar);
-                remove(Char1);
-                remove(Char2);
-                remove(Char3);
-//                ppg = new PingPongGame();
-////                ppg.setVisible(true);
-//                add(ppg);
-//                ServerMenu sm = new ServerMenu();
-//                sm.setVisible(false);
-////                remove(sm);
-//                remove(BackButton);
-//                remove(ipAddressLabel);
-//                remove(Start);
-//dispose();
+                remove(FightingGame);
+                remove(PingPongGame);
+    
+
                 revalidate();
                 repaint();
             }
         });   
-        
-        Char1.addActionListener(new ActionListener() {
+        PingPongGame.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                P1ChosenCharNum="p1redChar";
-                System.out.println(P1ChosenCharNum);
+                setSize(500, 600);
+            if (serverSocketHandler != null) {
+                serverSocketHandler.sendMessage("Ping");
             }
-        });
-        Char2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Character 2 selected");
-                P1ChosenCharNum="p1blueChar";
-                System.out.println(P1ChosenCharNum);
+                System.out.println("PingPong btn daragdsan");
+//                gm = new GameFrame();
+                ppg.setVisible(true);
+                add(ppg);
+                remove(BackButton);
+                remove(ipAddressLabel);
+                remove(connectedPlayerIp);
+                remove(connectedPlayerIpDisp);
+                remove(FightingGame);
+                remove(PingPongGame);
+    
 
+                revalidate();
+                repaint();
             }
         });
-        Char3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Character 3 selected");
-                P1ChosenCharNum="p1yellowChar";
-                System.out.println(P1ChosenCharNum);
 
-            }
-        });
     }
-    private void startServer(int port,ServerMenu sm,FightingGame gm) {
-        serverSocketHandler = new ServerSocketHandler(12345,sm,gm);
+    private void startServer(int port,ServerMenu sm,FightingGame gm,PingPongGame ppg) {
+        serverSocketHandler = new ServerSocketHandler(12345,sm,gm,ppg);
         serverSocketHandler.start();
     }
 

@@ -10,11 +10,13 @@ import java.net.Socket;
 public class ClientSocket {
     ClientMenu cm;
     FightingGame gm;
+    PingPongGame ppg;
     private Socket socket;
     private BufferedReader input;
     private PrintWriter output;
 
-    public ClientSocket(ClientMenu cm,String serverIP, int port,FightingGame gm) {
+    public ClientSocket(ClientMenu cm,String serverIP, int port,FightingGame gm,PingPongGame ppg) {
+        this.ppg = ppg;
         this.gm = gm;
         this.cm = cm;
         try {
@@ -27,17 +29,26 @@ public class ClientSocket {
                     while (true) {
                         String receivedMessage = receiveMessage();
                         if (receivedMessage != null) {
-                            if (gm != null) {
-                                ClientMenu.gm.setBackgroundColorByStringChar2(receivedMessage);
+                            if (ClientMenu.gm != null) {
+                                ClientMenu.gm.setMovementChar2(receivedMessage);
                                 ClientMenu.gm.revalidate();
                                 ClientMenu.gm.repaint();
-
+                            }
+                            if(ClientMenu.ppg != null){
+                                ClientMenu.ppg.setMovementPaddle1(receivedMessage);
+                                ClientMenu.ppg.revalidate();
+                                ClientMenu.ppg.repaint();
                             }
                         }
-                            if(receivedMessage.equalsIgnoreCase("start")){
-                                System.out.println("\nStaart daragsan genee\n");
+                            if(receivedMessage.equalsIgnoreCase("Fight")){
+                                System.out.println("\n Fight daragsan genee\n");
 //                                cm.callingPPG();
                                 cm.displayGameFrame();
+                            }
+                            else if(receivedMessage.equalsIgnoreCase("Ping")){
+                                System.out.println("\n Ping daragsan genee\n");
+//                                cm.callingPPG();
+                                cm.displayPingPong();
                             }
                             //endes ehled uur2 toglomnuda bichel yvnada
                     }
@@ -54,10 +65,16 @@ public class ClientSocket {
 public void sendMessage(String message) {
     System.out.println("Sending message: " + message);
     output.println(message);
-        if (gm != null) {
-            ClientMenu.gm.setBackgroundColorByStringChar1(message);
+        if (ClientMenu.gm != null) {
+            ClientMenu.gm.setMovementChar1(message);
             ClientMenu.gm.revalidate();
             ClientMenu.gm.repaint();
+        }
+        if(ClientMenu.ppg != null){
+            ClientMenu.ppg.setMovementPaddle2(message);
+            ClientMenu.ppg.revalidate();
+            ClientMenu.ppg.repaint();
+
         }
 }
 

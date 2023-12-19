@@ -32,12 +32,17 @@ public class FightingGame extends JPanel{
     HealthBar Char2HealthBack = new HealthBar();
     Timer timer1;
     Timer timer2;
+    
+    Timer attackTimer1;
+    Timer attackTimer2;
     static int x1=100,y1=270;
     static int x2=820,y2=270;
-    int att1xHandPos = 85 ,att1yHandPos = 80;
-    int att2xHandPos = 155 ,att2yHandPos = 80;
+    static int att1xHandPos = 85 ,att1yHandPos = 80;
+    static int att2xHandPos = 155 ,att2yHandPos = 80;
     int char1HealthLoc = 00 , char2HealthLoc = 690 , charHealthY = 0;
-    int char1HealthWidth = 300, char2HealthWidth = 300 , charHealthHeight=50;
+    static int char1HealthWidth = 300, char2HealthWidth = 300 , charHealthHeight=50;
+    public static boolean canPunchAgainChar1 = true;
+    public static boolean canPunchAgainChar2 = true;
     public FightingGame() {
         setSize(WIDTH, HEIGHT);
         setLayout(null);
@@ -85,6 +90,7 @@ public class FightingGame extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 Attack1.setVisible(false);
+                canPunchAgainChar1 = false;
                 repaint();
                 revalidate();
             }
@@ -93,6 +99,7 @@ public class FightingGame extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 Attack2.setVisible(false);
+                canPunchAgainChar2 = false;
                 repaint();
                 revalidate();
             }
@@ -101,6 +108,7 @@ public class FightingGame extends JPanel{
         revalidate();
     }
     public void char1Attack(){
+        canPunchAgainChar1 = true;
         Attack1.setVisible(true);
         timer1.start();
 
@@ -109,14 +117,13 @@ public class FightingGame extends JPanel{
         revalidate();
     }
     public void char2Attack(){
+        canPunchAgainChar2 = true;
         Attack2.setVisible(true);
         timer2.start();
 
         this.add(Attack2);
         repaint();
         revalidate();
-        
-
     }
     public Color getBackgroundColor() {
         return getBackground();
@@ -127,87 +134,85 @@ public class FightingGame extends JPanel{
         revalidate();
         repaint();
     }
-
-
-    public void setBackgroundColorByStringChar1(String colorString) {
+    public void setMovementChar1(String colorString) {
     if(colorString != null){
-            switch (colorString.toLowerCase()) {
-        case "a":
-            x1-=20;
-            Char1.setLocation(x1, y1);
-            Attack1.setLocation(x1+att1xHandPos, y1+att1yHandPos);
-            revalidate();
-            repaint();
-            break;
-        case "d":
-            x1+=20;
-            Char1.setLocation(x1, y1);
-            Attack1.setLocation(x1+att1xHandPos, y1+att1yHandPos);
-            revalidate();
-            repaint();
-            break;
-        case "s":
-            revalidate();
-            repaint();
-            break;
-        case "w":
-            revalidate();
-            repaint();
-            break;
-        case "j":
-            checkCollisions();
-            char1Attack();
-            revalidate();
-            repaint();
-            break;
-        default:
-            revalidate();
-            repaint();
-            break;
-    }
+        switch (colorString.toLowerCase()) {
+            case "a":
+                x1-=20;
+                Char1.setLocation(x1, y1);
+                Attack1.setLocation(x1+att1xHandPos, y1+att1yHandPos);
+                revalidate();
+                repaint();
+                break;
+            case "d":
+                x1+=20;
+                Char1.setLocation(x1, y1);
+                Attack1.setLocation(x1+att1xHandPos, y1+att1yHandPos);
+                revalidate();
+                repaint();
+                break;
+            case "s":
+                revalidate();
+                repaint();
+                break;
+            case "w":
+                revalidate();
+                repaint();
+                break;
+            case "j":
+                checkCollisions();
+                char1Attack();
+                revalidate();
+                repaint();
+                break;
+            default:
+                revalidate();
+                repaint();
+                break;
+        }
     }
     else{
         System.out.println("color string deer null irchihle");
     }
 
 }
-    public void setBackgroundColorByStringChar2(String colorString) {
-    switch (colorString.toLowerCase()) {
-        case "a":
-            checkCollisions();
-            x2-=20;
-            Char2.setLocation(x2, y2);
-            Attack2.setLocation(x2-att2xHandPos, y2+att2yHandPos);
-            revalidate();
-            repaint();
-            break;
-        case "d":
-            checkCollisions();
-            x2+=20;
-            Char2.setLocation(x2, y2);
-            Attack2.setLocation(x2-att2xHandPos, y2+att2yHandPos);
-            revalidate();
-            repaint();
-            break;
-        case "s":
-            revalidate();
-            repaint();
-            break;
-        case "w":
-            revalidate();
-            repaint();
-            break;
-        case "j":
-            checkCollisions();
-            char2Attack();
-            revalidate();
-            repaint();
-            break;
-        default:
-            revalidate();
-            repaint();
-            break;
-    }
+    public void setMovementChar2(String colorString) {
+        switch (colorString.toLowerCase()) {
+            case "a":
+                checkCollisions();
+                x2-=20;
+                Char2.setLocation(x2, y2);
+                Attack2.setLocation(x2-att2xHandPos, y2+att2yHandPos);
+                revalidate();
+                repaint();
+                break;
+            case "d":
+                checkCollisions();
+                x2+=20;
+                Char2.setLocation(x2, y2);
+                Attack2.setLocation(x2-att2xHandPos, y2+att2yHandPos);
+                revalidate();
+                repaint();
+                break;
+            case "s":
+                revalidate();
+                repaint();
+                break;
+            case "w":
+                revalidate();
+                repaint();
+                break;
+            case "j":
+                checkCollisions();
+                char2Attack();
+                revalidate();
+                repaint();
+                break;
+            default:
+                revalidate();
+                repaint();
+                break;
+        }
     }
     public void checkCollisions() {
             System.out.println("Chollision check");
@@ -215,18 +220,10 @@ public class FightingGame extends JPanel{
         Rectangle Char2Bounds = Char2.getBounds();
         Rectangle attack1Bounds = Attack1.getBounds();
         Rectangle attack2Bounds = Attack2.getBounds();
-            System.out.println("Char1: " + Char1Bounds.x);
-            System.out.println("Char2: " + Char2Bounds.x);
-            System.out.println("attack1: " + (attack1Bounds.x+150));
-            System.out.println("attack2: " + (attack2Bounds.x-150));
-//            if(Char1Bounds.x>(attack2Bounds.x-150)&& Attack2.isVisible()){
-//                System.out.println("Char1 got hit");
-//            }
-//            if(Char2Bounds.x<(attack1Bounds.x+150)&& Attack1.isVisible()){
-//                System.out.println("Char2 got hit");
-//            }
-            
-            
+//            System.out.println("Char1: " + Char1Bounds.x);
+//            System.out.println("Char2: " + Char2Bounds.x);
+//            System.out.println("attack1: " + (attack1Bounds.x+150));
+//            System.out.println("attack2: " + (attack2Bounds.x-150));            
         if (Char1Bounds.intersects(attack2Bounds) && Attack1.isVisible()) {
             x2 += 150;
             System.out.println("Char2 got hit");
@@ -236,6 +233,7 @@ public class FightingGame extends JPanel{
             Attack2.setLocation(x1+att1xHandPos, y1+att1yHandPos);
             repaint();
             revalidate();
+
             
             
         }

@@ -1,6 +1,5 @@
 package FightingGame;
 
-import static FightingGame.ServerMenu.P1ChosenCharNum;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class ServerSocketHandler extends Thread {
     private BufferedReader input;
     private PrintWriter output;
 
-    public ServerSocketHandler(int port, ServerMenu sm,FightingGame gm) {
+    public ServerSocketHandler(int port, ServerMenu sm,FightingGame gm,PingPongGame ppg) {
         this.gm = gm; 
         this.sm = sm;
         try {
@@ -40,11 +39,18 @@ public class ServerSocketHandler extends Thread {
             while (true) {
                 String receivedMessage = input.readLine();
                 if (receivedMessage != null) {
-                    ServerMenu.gm.setBackgroundColorByStringChar1(receivedMessage);
-                    ServerMenu.gm.revalidate();
-                    ServerMenu.gm.repaint();
-            
+                    if(ServerMenu.gm != null){
+                        ServerMenu.gm.setMovementChar1(receivedMessage);
+                        ServerMenu.gm.revalidate();
+                        ServerMenu.gm.repaint();
+                    }
+                    if(ServerMenu.ppg != null){
+                        ServerMenu.ppg.setMovementPaddle2(receivedMessage);
+                        ServerMenu.ppg.revalidate();
+                        ServerMenu.ppg.repaint();
+                    }
                 }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,9 +59,17 @@ public class ServerSocketHandler extends Thread {
 
     public void sendMessage(String message) {
 //            System.out.println("Server Char2 hudulguh gj uzedena");
-            ServerMenu.gm.setBackgroundColorByStringChar2(message);
-            ServerMenu.gm.revalidate();
-            ServerMenu.gm.repaint();
+            if(ServerMenu.gm != null){
+                ServerMenu.gm.setMovementChar2(message);
+                ServerMenu.gm.revalidate();
+                ServerMenu.gm.repaint();
+            }
+            if(ServerMenu.ppg != null){
+                ServerMenu.ppg.setMovementPaddle1(message);
+                ServerMenu.ppg.revalidate();
+                ServerMenu.ppg.repaint();
+            }
+
         System.out.println("Sending message: " + message);
         if (output != null) {
             output.println(message);
